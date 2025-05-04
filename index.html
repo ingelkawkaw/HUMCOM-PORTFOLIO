@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home Page</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: #000000;
+      padding-top: 40px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      opacity: 0; /* Initially hidden */
+      animation: fadeIn 2s forwards; /* Fade-in effect */
+    }
+
+    canvas#particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    body > *:not(canvas) {
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+    hi{
+      color: pink;
+    }
+
+
+    .stuff-banner {
+      margin: 30px auto;
+      padding: 20px;
+      border: 2px solid black;
+      max-width: 600px;
+      background-color: rgba(255, 255, 255, 0.8);
+      opacity: 0;
+      animation: fadeIn 2s forwards 1s; /* Delay for fade-in effect */
+    }
+
+    .typing {
+      display: inline-block;
+      font-family: 'Courier', monospace;
+      font-size: 1.2rem;
+      width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 2px solid black; /* Typing cursor effect */
+      animation: typing 4s steps(30) 1s forwards, blinkCaret 0.75s step-end infinite; /* Typing animation */
+    }
+
+    @keyframes typing {
+      0% {
+        width: 0;
+      }
+      100% {
+        width: 100%;
+      }
+    }
+
+    @keyframes blinkCaret {
+      50% {
+        border-color: transparent;
+      }
+      100% {
+        border-color: black;
+      }
+    }
+
+    .nav-buttons button {
+      margin: 10px;
+      width: 100px;
+      background-color: rgba(255, 255, 255, 0.8); /* Same color as stuff banner */
+      border: 2px solid black; /* Match the border style */
+      color: black; /* Text color */
+    }
+
+    .nav-buttons button.lab-activities {
+      width: 150px; /* Adjust width for 'Lab Activities' */
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="particles"></canvas>
+
+  <h1>Home Page ROR</h1>
+
+  <div class="mt-4">
+    <img src="pic.png" alt="figure" class="rounded-circle" height="300px" width="300px">
+  </div>
+
+  <div class="stuff-banner">
+    <p>STUFF</p>
+    <p class="typing">woww wow wow rofl</p> <!-- Typing animation applied -->
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn btn-outline-dark">About</button>
+    <button class="btn btn-outline-dark">Contact</button>
+    <button class="btn btn-outline-dark lab-activities">Lab Activities</button>
+    <button class="btn btn-outline-dark">GAY</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const mouse = { x: null, y: null, radius: 150 };
+
+    function createParticle(x = Math.random() * canvas.width, y = Math.random() * canvas.height) {
+      return {
+        x,
+        y,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: (Math.random() - 0.5) * 1.5,
+        radius: 2 + Math.random() * 2
+      };
+    }
+
+    for (let i = 0; i < 100; i++) {
+      particles.push(createParticle());
+    }
+
+    canvas.addEventListener('mousemove', e => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+
+    canvas.addEventListener('mouseout', () => {
+      mouse.x = null;
+      mouse.y = null;
+    });
+
+    canvas.addEventListener('click', e => {
+      for (let i = 0; i < 10; i++) {
+        particles.push(createParticle(e.clientX, e.clientY));
+      }
+    });
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (const p of particles) {
+        if (mouse.x !== null && mouse.y !== null) {
+          const dx = mouse.x - p.x;
+          const dy = mouse.y - p.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < mouse.radius && dist > 5) {
+            const force = (mouse.radius - dist) / mouse.radius;
+            const angle = Math.atan2(dy, dx);
+            p.vx += Math.cos(angle) * force * 0.05;
+            p.vy += Math.sin(angle) * force * 0.05;
+          }
+        }
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x <= 0 || p.x >= canvas.width) p.vx *= -1;
+        if (p.y <= 0 || p.y >= canvas.height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#aaa';
+        ctx.fill();
+
+        for (const q of particles) {
+          const dx = p.x - q.x;
+          const dy = p.y - q.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.strokeStyle = 'rgba(170, 170, 170, 0.1)';
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+
+</body>
+</html>

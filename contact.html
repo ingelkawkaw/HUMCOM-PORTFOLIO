@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #9FB3DF;
+            --text-light: #213448;
+            --sub-light: #143D60;
+            --tagline-light: #161179;
+            --link-light: #27548A;
+            --link-hover-light: #183B4E;
+            --bg-dark: #000b22;
+            --text-dark: #aaa;
+            --sub-dark: #aaa;
+            --tagline-dark: #fff;
+            --kaomoji-dark: cyan;
+            --link-dark: #bbbbbb;
+            --link-hover-dark: #ffffff;
+        }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            font-family: 'Montserrat', sans-serif;
+            padding-top: 70px;
+            position: relative;
+            z-index: 1;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+        .contactbox {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            margin: 0 auto;
+            transition: background-color 0.3s ease;
+        }
+        .content {
+            text-align: center;
+            padding: 6rem 2rem 2rem;
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        .navbar {
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 25px;
+            overflow: hidden;
+            margin: 1rem auto;
+            max-width: 700px;
+            padding: 0.5rem 1rem;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .navbar-nav .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            color: var(--text-dark) !important;
+            transition: transform 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            transform: scale(1.1);
+        }
+        body.light-mode {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+        }
+        body.light-mode .navbar {
+            background-color: var(--bg-light);
+        }
+        body.light-mode .navbar-nav .nav-link {
+            color: var(--text-light) !important;
+        }
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+        body.dark-mode .navbar {
+            background-color: var(--bg-dark);
+        }
+        body.dark-mode .navbar-nav .nav-link {
+            color: var(--text-dark) !important;
+        }
+        #theme-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #000b22;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        body.dark-mode #theme-toggle {
+            background-color: #222;
+            color: white;
+        }
+        #back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 20px;
+            display: none;
+            cursor: pointer;
+            z-index: 9999;
+            transition: background-color 0.3s ease;
+        }
+        #back-to-top:hover {
+            background-color: #0056b3;
+        }
+        .contactbox a {
+            color: var(--link-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .contactbox a:hover {
+            color: var(--link-hover-light);
+        }
+        .contactbox i {
+            font-size: 2rem;
+            margin-right: 10px;
+        }
+        .contactbox h4 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        .contact-form input,
+        .contact-form textarea {
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            padding: 1rem;
+            border: 1px solid var(--sub-dark);
+            width: 100%;
+        }
+        .contact-form button {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--link-light);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .contact-form button:hover {
+            background-color: var(--link-hover-light);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <button id="theme-toggle" title="Toggle Theme">🌞</button>
+    <nav class="navbar navbar-expand-lg shadow-sm py-3 px-4 fixed-top">
+        <div class="container justify-content-center">
+            <ul class="navbar-nav flex-row gap-4 text-center">
+                <li class="nav-item"><a class="nav-link fw-semibold" href="index2.html"><i class="fas fa-home"></i> home</a></li>
+                <li class="nav-item"><a class="nav-link fw-semibold" href="about.html"><i class="fas fa-user"></i> about me</a></li>
+                <li class="nav-item"><a class="nav-link fw-semibold" href="contact.html"><i class="fas fa-envelope"></i> contact</a></li>
+                <li class="nav-item"><a class="nav-link fw-semibold" href="gallery.html"><i class="fas fa-image"></i> gallery</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="content">
+        <div class="contactbox text-center">
+            <h1 class="display-4">Contacts</h1>
+            <h4>You can contact or find me on these platforms:</h4>
+            <br>
+            <div>
+                <h5><a href="mailto:angelgrueso168@gmail.com"><i class="fas fa-envelope"></i> Email</a></h5>
+                <h5><a href="https://www.instagram.com/beanbunss/"><i class="fab fa-instagram"></i> Instagram</a></h5>
+                <h5><a href="https://facebook.com/angelmae.grueso.5/"><i class="fab fa-facebook"></i> Facebook</a></h5>
+                <h5><a href="https://discordapp.com/users/1319583246585167906"><i class="fab fa-discord"></i> Discord</a></h5>
+            </div>
+            <br>
+            <div class="contact-form mt-5">
+                <h5>Wanna chat? Inquire? Ask something? Send me a message!</h5>
+                <br>
+                <form action="https://formspree.io/f/movdekrd" method="POST">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" id="message" name="message" rows="4" placeholder="Your Message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <button id="back-to-top">↑</button>
+
+    <script>
+        const themeToggle = document.getElementById("theme-toggle");
+        const savedTheme = localStorage.getItem("theme");
+
+        if (savedTheme === "light") {
+            document.body.classList.add("light-mode");
+            document.body.classList.remove("dark-mode");
+            themeToggle.textContent = "🌙";
+        } else {
+            document.body.classList.add("dark-mode");
+            document.body.classList.remove("light-mode");
+            themeToggle.textContent = "🌞";
+        }
+
+        themeToggle.addEventListener("click", function () {
+            const isLight = document.body.classList.toggle("light-mode");
+            document.body.classList.toggle("dark-mode");
+            localStorage.setItem("theme", isLight ? "light" : "dark");
+            themeToggle.textContent = isLight ? "🌙" : "🌞";
+        });
+    </script>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const mouse = { x: null, y: null, radius: 150 };
+
+        function createParticle(x = Math.random() * canvas.width, y = Math.random() * canvas.height) {
+            return {
+                x,
+                y,
+                vx: (Math.random() - 0.5) * 1.5,
+                vy: (Math.random() - 0.5) * 1.5,
+                radius: 2 + Math.random() * 2
+            };
+        }
+
+        for (let i = 0; i < 100; i++) {
+            particles.push(createParticle());
+        }
+
+        canvas.addEventListener('mousemove', e => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        canvas.addEventListener('mouseout', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        canvas.addEventListener('click', e => {
+            for (let i = 0; i < 10; i++) {
+                particles.push(createParticle(e.clientX, e.clientY));
+            }
+        });
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (const p of particles) {
+                if (mouse.x !== null && mouse.y !== null) {
+                    const dx = mouse.x - p.x;
+                    const dy = mouse.y - p.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < mouse.radius && dist > 5) {
+                        const force = (mouse.radius - dist) / mouse.radius;
+                        const angle = Math.atan2(dy, dx);
+                        p.vx += Math.cos(angle) * force * 0.05;
+                        p.vy += Math.sin(angle) * force * 0.05;
+                    }
+                }
+
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x <= 0 || p.x >= canvas.width) p.vx *= -1;
+                if (p.y <= 0 || p.y >= canvas.height) p.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#fff' : '#213555';
+                ctx.fill();
+
+                for (const q of particles) {
+                    const dx = p.x - q.x;
+                    const dy = p.y - q.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(q.x, q.y);
+                        ctx.strokeStyle = document.body.classList.contains('dark-mode')
+                            ? 'rgba(255, 255, 255, 0.1)'
+                            : 'rgba(33, 53, 85, 0.1)';
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    </script>
+
+    <script>
+        window.onscroll = function () {
+            const btn = document.getElementById("back-to-top");
+            btn.style.display = window.scrollY > 100 ? "block" : "none";
+        };
+
+        document.getElementById("back-to-top").onclick = function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+    </script>
+</body>
+</html>

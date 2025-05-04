@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Winter & Snow Camping Safety</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap">
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: #f5fbff;
+      color: #333;
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #2a6f8e;
+    }
+
+    h3 {
+      background-color: #dff1fa;
+      padding: 10px 15px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 2rem;
+    }
+
+    h3:hover {
+      background-color: #c6e7f5;
+    }
+
+    ul, ol {
+      padding-left: 2rem;
+      margin-top: 0.5rem;
+    }
+
+    li {
+      margin: 4px 0;
+    }
+
+    .accordion-content {
+      display: none;
+      margin-top: 0.5rem;
+      padding: 0 1rem 1rem;
+      background: #ffffff;
+      border-left: 3px solid #a3d5ee;
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .accordion-content ul ul, 
+    .accordion-content ul ul ul {
+      list-style-type: circle;
+    }
+
+    .accordion-content ol ul, 
+    .accordion-content ol ul ul {
+      list-style-type: square;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Winter and Snow Camping Safety for Scout Leaders</h1>
+  <h2>Topics Covered</h2>
+
+  <h3 onclick="toggleAccordion(this)">Session 1 - The Fun Stuff - In town, Saturday morning</h3>
+  <div class="accordion-content">
+    <ul class="list1">
+      <li>Goals</li>
+      <li>Introductory remarks and outline of this course</li>
+      <li>Round Robin
+        <ul class="list2">
+          <li>Clothing</li>
+          <li>Sleeping materials:
+            <ul class="list3">
+              <li>Sleeping bags</li>
+              <li>Sleeping pads</li>
+              <li>Other sleeping gear</li>
+            </ul>
+          </li>
+          <li>Tents and other camping gear</li>
+        </ul>
+      </li>
+      <li>Trip planning</li>
+      <li>Winter driving</li>
+    </ul>
+  </div>
+
+  <h3 onclick="toggleAccordion(this)">Session 2 - Serious Concerns - In town, Saturday afternoon</h3>
+  <div class="accordion-content">
+    <ol class="list4">
+      <li>Further Administrative Details</li>
+      <li>Overview of problems unique to winter and snow activities</li>
+      <li>Round Robin
+        <ul class="list5">
+          <li>Minimum Impact Camping and Sanitation</li>
+          <li>Snow travel and intro to
+            <ul class="list6">
+              <li>Skis</li>
+              <li>Snowshoes</li>
+              <li>Sleds</li>
+            </ul>
+          </li>
+          <li>Safety - how winter differs from summer trips</li>
+          <li>Avalanche dangers</li>
+        </ul>
+      </li>
+      <li>Navigating - Special considerations in land navigation in winter conditions</li>
+      <li>Dealing with Winter Emergencies</li>
+      <li>Other Problems to Consider and Wrap-up of session</li>
+    </ol>
+  </div>
+
+  <script>
+    function toggleAccordion(header) {
+      const content = header.nextElementSibling;
+      const isOpen = content.style.display === "block";
+      document.querySelectorAll('.accordion-content').forEach(el => el.style.display = 'none');
+      if (!isOpen) {
+        content.style.display = "block";
+      }
+    }
+  </script>
+
+</body>
+</html>

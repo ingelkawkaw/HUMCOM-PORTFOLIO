@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplication Table Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #4F959D, #205781);
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+        }
+        #content {
+            text-align: center;
+            padding: 40px;
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            width: 60%;
+            margin: 0 auto;
+            margin-top: 100px;
+            transition: opacity 0.5s ease-in-out;
+        }
+        h3 {
+            color: #4F959D;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .form-control, .btn {
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .form-control {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            padding: 15px;
+        }
+        .btn {
+            margin-top: 20px;
+            font-size: 1.3rem;
+            padding: 12px 25px;
+            background-color: #4F959D;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .btn:hover {
+            background-color: #205781;
+            transform: scale(1.05);
+        }
+        .table-container {
+            width: 80%;
+            margin: 30px auto;
+            display: none;
+            animation: fadeIn 0.8s ease-out;
+            position: relative;
+        }
+        #goBackBtn {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background-color: #4F959D;
+            color: white;
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        #goBackBtn:hover {
+            background-color: #205781;
+            transform: scale(1.05);
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        .table td, .table th {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        .table th {
+            background-color: #4F959D;
+            color: white;
+            font-size: 1.3rem;
+        }
+        .table td {
+            background-color: #f1f6fc;
+            font-size: 1.2rem;
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #e1eff9;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="content">
+        <h3>Multiplication Table Generator</h3>
+        <div class="mb-4">
+            <input type="number" id="rows" class="form-control" placeholder="Enter number of rows" />
+        </div>
+        <div class="mb-4">
+            <input type="number" id="columns" class="form-control" placeholder="Enter number of columns" />
+        </div>
+        <button class="btn" onclick="generateTable();">Generate Table</button>
+    </div>
+
+    <div id="tableContainer" class="table-container">
+        <button id="goBackBtn" onclick="goBack();">Go Back</button>
+        <table id="table" class="table table-striped table-bordered"></table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function generateTable() {
+            let rows = document.getElementById('rows').value;
+            let columns = document.getElementById('columns').value;
+
+            if (!rows || !columns || rows <= 0 || columns <= 0) {
+                alert("Please enter valid numbers for rows and columns.");
+                return;
+            }
+
+            let table = document.getElementById('table');
+            table.innerHTML = '';
+
+            let headerRow = document.createElement('tr');
+            for (let j = 1; j <= columns; j++) {
+                let headerCell = document.createElement('th');
+                headerCell.textContent = 'Col ' + j;
+                headerRow.appendChild(headerCell);
+            }
+            table.appendChild(headerRow);
+
+            for (let i = 1; i <= rows; i++) {
+                let row = document.createElement('tr');
+                for (let j = 1; j <= columns; j++) {
+                    let cell = document.createElement('td');
+                    cell.textContent = i * j;
+                    row.appendChild(cell);
+                }
+                table.appendChild(row);
+            }
+
+            document.getElementById('content').style.display = 'none';
+            document.getElementById('tableContainer').style.display = 'block';
+        }
+
+        function goBack() {
+            document.getElementById('content').style.display = 'block';
+            document.getElementById('tableContainer').style.display = 'none';
+            document.getElementById('rows').value = '';
+            document.getElementById('columns').value = '';
+        }
+    </script>
+
+</body>
+</html>

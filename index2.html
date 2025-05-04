@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Angel Mae – Portfolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-light: #9FB3DF;
+      --text-light: #213448;
+      --sub-light: #143D60;
+      --tagline-light: #161179;
+      --link-light: #27548A;
+      --link-hover-light: #183B4E;
+      
+      --bg-dark: #000b22;
+      --text-dark: #aaa;
+      --sub-dark: #aaa;
+      --tagline-dark: #fff;
+      --kaomoji-dark: cyan;
+      --link-dark: #bbbbbb;
+      --link-hover-dark: #ffffff;
+    }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Montserrat', sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      scroll-behavior: smooth;
+
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    body.dark-mode {
+      background-color: var(--bg-dark);
+    }
+
+    .img {
+      border-radius: 50%;
+      border: 5px solid #ffffff;
+      width: 300px;
+      height: 300px;
+      object-fit: cover;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .img:hover {
+      transform: rotate(360deg);
+    }
+
+    .line {
+      border-left: 2px solid #ccc;
+      height: 100%;
+    }
+
+    .link {
+      font-size: 20px;
+      color: var(--link-light);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 12px 0;
+      transition: color 0.2s ease;
+    }
+
+    .link:hover {
+      color: var(--link-hover-light);
+    }
+
+    body.dark-mode .link {
+      color: var(--link-dark);
+    }
+
+    body.dark-mode .link:hover {
+      color: var(--link-hover-dark);
+    }
+
+    .title {
+      font-size: 30px;
+      font-weight: bold;
+      letter-spacing: 4px;
+      color: var(--text-light);
+    }
+
+    .sub {
+      font-size: 25px;
+      color: var(--sub-light);
+    }
+
+    .tagline {
+      font-style: italic;
+      font-size: 21px;
+      color: var(--tagline-light);
+    }
+
+    .kaomoji {
+      color: #205781;
+    }
+
+    .bottom {
+      position: absolute;
+      bottom: 10px;
+      left: 20px;
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    body.dark-mode .title,
+    body.dark-mode .bottom {
+      color: var(--text-dark);
+    }
+
+    body.dark-mode .sub {
+      color: var(--sub-dark);
+    }
+
+    body.dark-mode .tagline {
+      color: var(--tagline-dark);
+    }
+
+    body.dark-mode .kaomoji {
+      color: var(--kaomoji-dark);
+    }
+
+
+    .mode-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 999;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      border: none;
+      font-size: 20px;
+      background-color: #ffffffdd;
+      color: #000b22;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 8px rgba(0,0,0,0.15);
+    }
+
+    .mode-toggle:hover {
+      background-color: #eeeeee;
+    }
+
+    body.dark-mode .mode-toggle {
+      background-color: #222;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <button id="modeToggle" class="mode-toggle" title="Toggle dark/light mode">🌙</button>
+
+  <div class="container">
+    <div class="row justify-content-center align-items-center vh-100">
+      <div class="col-md-4 text-center">
+        <img src="picc.jpg" alt="Profile" class="img mb-4" />
+        <p class="bottom">Angel Mae Grueso #furry #ILoveIdia</p>
+      </div>
+      <div class="col-md-1 d-none d-md-block">
+        <div class="line"></div>
+      </div>
+      <div class="col-md-4 text-start">
+        <div class="title">Angel Mae</div>
+        <div class="sub">Grueso</div>
+        <p class="tagline">Welcome to my <span id="switchWord">portfolio</span> <span class="kaomoji">(˶˃ ᵕ ˂˶) .ᐟ.ᐟ</span></p>
+        <div class="mt-4">
+          <a href="about.html" class="link"><i class="fas fa-user"></i> about me</a>
+          <a href="gallery.html" class="link"><i class="fas fa-image"></i> gallery</a>
+          <a href="contact.html" class="link"><i class="fas fa-envelope"></i> contact</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  
+    const particles = [];
+    const mouse = { x: null, y: null, radius: 150 };
+  
+    function createParticle(x = Math.random() * canvas.width, y = Math.random() * canvas.height) {
+      return {
+        x,
+        y,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: (Math.random() - 0.5) * 1.5,
+        radius: 2 + Math.random() * 2
+      };
+    }
+  
+    for (let i = 0; i < 100; i++) {
+      particles.push(createParticle());
+    }
+  
+    canvas.addEventListener('mousemove', e => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+  
+    canvas.addEventListener('mouseout', () => {
+      mouse.x = null;
+      mouse.y = null;
+    });
+  
+    canvas.addEventListener('click', e => {
+      for (let i = 0; i < 10; i++) {
+        particles.push(createParticle(e.clientX, e.clientY));
+      }
+    });
+  
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+      for (const p of particles) {
+        if (mouse.x !== null && mouse.y !== null) {
+          const dx = mouse.x - p.x;
+          const dy = mouse.y - p.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+  
+          if (dist < mouse.radius && dist > 5) {
+            const force = (mouse.radius - dist) / mouse.radius;
+            const angle = Math.atan2(dy, dx);
+            p.vx += Math.cos(angle) * force * 0.05;
+            p.vy += Math.sin(angle) * force * 0.05;
+          }
+        }
+  
+        p.x += p.vx;
+        p.y += p.vy;
+  
+        if (p.x <= 0 || p.x >= canvas.width) p.vx *= -1;
+        if (p.y <= 0 || p.y >= canvas.height) p.vy *= -1;
+  
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#fff' : '#213555';
+        ctx.fill();
+  
+        for (const q of particles) {
+          const dx = p.x - q.x;
+          const dy = p.y - q.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.strokeStyle = document.body.classList.contains('dark-mode')
+              ? 'rgba(255, 255, 255, 0.1)'
+              : 'rgba(33, 53, 85, 0.1)';
+            ctx.stroke();
+          }
+        }
+      }
+  
+      requestAnimationFrame(draw);
+    }
+  
+    draw();
+  
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  
+    const switchWord = document.getElementById("switchWord");
+    const words = ["portfolio", "website"];
+    let i = 0;
+  
+    function typeAndSwitch() {
+      const word = words[i];
+      let charIndex = 0;
+      switchWord.textContent = "";
+  
+      const type = setInterval(() => {
+        switchWord.textContent += word[charIndex];
+        charIndex++;
+        if (charIndex === word.length) {
+          clearInterval(type);
+          setTimeout(() => {
+            const erase = setInterval(() => {
+              if (switchWord.textContent.length > 0) {
+                switchWord.textContent = switchWord.textContent.slice(0, -1);
+              } else {
+                clearInterval(erase);
+                i = (i + 1) % words.length;
+                typeAndSwitch();
+              }
+            }, 80);
+          }, 5000);
+        }
+      }, 100);
+    }
+  
+    typeAndSwitch();
+  
+    const modeToggle = document.getElementById('modeToggle');
+  
+    // Check the saved theme on load
+    const savedMode = localStorage.getItem('theme');
+    if (savedMode) {
+      document.body.classList.toggle('dark-mode', savedMode === 'dark');
+      modeToggle.textContent = savedMode === 'dark' ? '🌞' : '🌙';
+    }
+  
+    modeToggle.addEventListener('click', () => {
+      const darkMode = document.body.classList.toggle('dark-mode');
+      localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+      modeToggle.textContent = darkMode ? '🌞' : '🌙';
+    });
+  </script>
+</body>
+</html>
